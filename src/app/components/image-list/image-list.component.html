@@ -1,0 +1,8 @@
+<ul>
+    <li *ngFor="let image of images">
+      <img [src]="image.url" alt="Image">
+      <p>{{ image.name }}</p>
+      <!-- Afficher d'autres informations de l'image -->
+    </li>
+  </ul>
+  
