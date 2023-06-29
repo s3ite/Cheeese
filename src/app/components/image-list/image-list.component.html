@@ -1,8 +1,11 @@
-<ul>
-    <li *ngFor="let image of images">
-      <img [src]="image.url" alt="Image">
-      <p>{{ image.name }}</p>
-      <!-- Afficher d'autres informations de l'image -->
-    </li>
-  </ul>
-  
+<div class="row">
+  <div class="images" *ngFor="let image of images">
+    <div class="card">
+      <a href="{{image.url}}_b.jpg">
+        <div class="image-container">
+          <img src="{{image.url}}_m.jpg" title="{{image.title}}">
+        </div>
+      </a>
+    </div>
+  </div>
+</div>

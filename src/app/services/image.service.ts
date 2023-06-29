@@ -15,8 +15,9 @@ export class ImageService {
     let Urls: Object[] = [];
     responseData.photos.photo.forEach((photo: any) => {
       const photoObj = {
-        url: `https://live.staticflickr.com/${photo.server}/${photo.id}_${photo.secret}.jpg`,
-        title: photo.title
+        url: `https://live.staticflickr.com/${photo.server}/${photo.id}_${photo.secret}_z.jpg`,
+        title: photo.title,
+        date: photo.date
       }
       Urls.push(photoObj);
     })

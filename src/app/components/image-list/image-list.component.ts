@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {ImageService} from '../../services/image.service';
 
 @Component({
@@ -6,20 +6,34 @@ import {ImageService} from '../../services/image.service';
   templateUrl: './image-list.component.html',
   styleUrls: ['./image-list.component.css']
 })
-export class ImageListComponent {
+export class ImageListComponent implements OnChanges, OnInit{
   images: any[] = [];
+
+  @Input() searchTerm: string = "";
 
   constructor(private imageService: ImageService) {
   }
-
-
-  ngOnInit() {
-    // Appeler le service pour récupérer les images
+  handleSearch(searchTerm: string){
+    if(searchTerm == "") {
+      return;
+    }
     console.log("Starting"); // this is a test -> need to bind the value of the search bar with this.
-    let response = this.imageService.getPhotosByKeyword("bus").then((response) => {
-      console.log(response.data);
+    let response = this.imageService.getPhotosByKeyword(searchTerm).then((response) => {
+      console.log(response);
       this.images = this.imageService.parseResponse(response);
       console.log(this.images);
     })
+  }
+  ngOnChanges(changes: SimpleChanges) {
+    console.log(changes);
+    if(!changes['searchTerm'].firstChange && changes['searchTerm'].currentValue) {
+      console.log(this.searchTerm);
+      this.handleSearch(this.searchTerm);
+    }
+  }
+
+  ngOnInit() {
+    console.log(this.searchTerm);
+    this.handleSearch(this.searchTerm);
   }
 }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, Input} from '@angular/core';
 
 @Component({
   selector: 'app-view-area',
@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./view-area.component.css']
 })
 export class ViewAreaComponent {
-
+  @Input() searchTerm: string = "";
 }
