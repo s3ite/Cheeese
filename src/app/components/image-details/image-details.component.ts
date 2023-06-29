@@ -14,7 +14,6 @@ export class ImageDetailsComponent implements OnInit {
   ngOnInit() {
     // Récupérer l'identifiant de l'image à partir des paramètres de l'URL
     const imageId = this.route.snapshot.params['id'];
-    
 
   }
 }
