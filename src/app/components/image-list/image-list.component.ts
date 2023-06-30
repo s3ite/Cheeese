@@ -1,6 +1,5 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {ImageService} from '../../services/image.service';
-import {error} from "@angular/compiler-cli/src/transformers/util";
 
 @Component({
   selector: 'app-image-list',
@@ -16,19 +15,31 @@ export class ImageListComponent implements OnChanges, OnInit {
 
   showInfo: boolean = false;
 
+  @Input() formData: any = null;
+
   constructor(private imageService: ImageService) {
   }
 
 
   ngOnChanges(changes: SimpleChanges) {
-    if (!changes['searchTerm'].firstChange && changes['searchTerm'].currentValue) {
-      this.imageService.handleSearch(this.searchTerm, this.imageService)
-        .then((res) => {
-          this.images = res;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+    console.log(changes);
+    if (changes['searchTerm']) {
+      if (!changes['searchTerm'].firstChange && changes['searchTerm'].currentValue) {
+        this.imageService.handleSearch(this.searchTerm, this.imageService)
+          .then((res) => {
+            this.images = res;
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    }
+    else if(changes['formData']) {
+      console.log("changing formData");
+      if (!changes['formData'].firstChange && changes['formData'].currentValue) {
+        console.log(this.formData);
+        //TODO Handle the search with form params -> change HandleSearch signature.
+      }
     }
   }
 

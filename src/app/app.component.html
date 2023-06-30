@@ -1,5 +1,4 @@
 <app-header></app-header>
-<app-search-bar (search)="onSearch($event)"></app-search-bar>
-
-<app-view-area [searchTerm]="searchTerm"></app-view-area>
+<app-search-bar (search)="onSearch($event)" (formEvent)="onForm($event)"></app-search-bar>
+<app-view-area [searchTerm]="searchTerm" [formData]="formData"></app-view-area>
 

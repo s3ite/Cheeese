@@ -7,4 +7,5 @@ import {Component, Input} from '@angular/core';
 })
 export class ViewAreaComponent {
   @Input() searchTerm: string = "";
+  @Input() formData: any;
 }

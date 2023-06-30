@@ -11,6 +11,7 @@ import { ImageListComponent } from './components/image-list/image-list.component
 import { ImageSliderComponent } from './components/image-slider/image-slider.component';
 import { ImageDetailsComponent } from './components/image-details/image-details.component';
 import { SearchFormComponent } from './components/search-form/search-form.component';
+import {ImageService} from "./services/image.service";
 
 @NgModule({
   declarations: [
@@ -28,7 +29,7 @@ import { SearchFormComponent } from './components/search-form/search-form.compon
     AppRoutingModule,
     FormsModule
   ],
-  providers: [],
+  providers: [ImageService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
