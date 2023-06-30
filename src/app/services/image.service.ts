@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import axios from "axios";
 import {environment} from '../environments';
-import {error} from "@angular/compiler-cli/src/transformers/util";
 
 const FLICKR_KEY = environment.flickrKey;
 
@@ -10,6 +9,23 @@ const FLICKR_KEY = environment.flickrKey;
 })
 
 export class ImageService {
+
+  async handleSearch(searchTerm: string, imageService: ImageService): Promise<any> {
+    if (searchTerm === "") {
+      return;
+    }
+    try {
+      const response = await imageService.getPhotosByKeyword(searchTerm);
+      const images: any[] = imageService.parseResponse(response);
+      const promises = images.map(async (image: any) => {
+        const infos = await imageService.getPhotoInfo(image.id);
+        return {...image, ...infos};
+      });
+      return await Promise.all(promises);
+    } catch (error) {
+    }
+  }
+
 
   parseResponse = function (responseData: any) { // -> get all the urls associated with the photos.
     let Urls: Object[] = [];
@@ -98,7 +114,6 @@ export class ImageService {
         location: data.photo.location,
         comments: data.photo.comments._content,
         tags: data.photo.tags.tag,
-        url: `https://live.staticflickr.com/${data.photo.server}/${data.photo.id}_${data.photo.secret}.${data.photo.originalformat}`,
       };
       return result;
     } catch (error) {
