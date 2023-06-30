@@ -1,11 +1,20 @@
 <div class="row">
   <div class="images" *ngFor="let image of images">
-    <div class="card">
+    <div class="card"
+         (mouseover)="showImageDetails(image)"
+         (mouseleave)="hideImageDetails()"
+    >
       <a href="{{image.url}}_b.jpg">
         <div class="image-container">
           <img src="{{image.url}}_m.jpg" title="{{image.title}}">
         </div>
       </a>
+      <div class="image-details-container"
+           *ngIf="showInfo && selectedImage === image">
+        <div class="app-image-details-popup">
+          <app-image-details [imageInfos]="imageInfo"></app-image-details>
+        </div>
+      </div>
     </div>
   </div>
 </div>

@@ -1,7 +1,9 @@
-<div>
-    <h2>{{ image.name }}</h2>
-    <p>Par {{ image.author }}</p>
-    <img [src]="image.url" alt="Image">
-    <p>{{ image.description }}</p>
-    <!-- Afficher d'autres informations détaillées de l'image -->
+<div class="image-details-container">
+  <div class="image-details">
+    <h2>{{ imageInfos.title }}</h2>
+    <p>Par {{ imageInfos.owner }}</p>
+    <p>Datant du {{ imageInfos.date }}</p>
+    <p *ngIf="imageInfos.location"> localisation: {{ Object.values(imageInfos.location['country'])[0]}}</p>
+    <!-- Display additional image details here -->
   </div>
+</div>

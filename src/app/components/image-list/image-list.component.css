@@ -31,3 +31,19 @@ img {
   object-fit: cover; /* Maintain aspect ratio and fill the container */
 }
 
+.image-details-container {
+  position: relative;
+}
+
+.app-image-details-popup {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 200px; /* Adjust the width as needed */
+  z-index: 1; /* Adjust the z-index as needed */
+}
+.app-image-details-popup h2,
+.app-image-details-popup p {
+  color: white; /* Set the desired text color */
+}
+

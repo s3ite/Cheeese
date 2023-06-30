@@ -17,7 +17,8 @@ export class ImageService {
       const photoObj = {
         url: `https://live.staticflickr.com/${photo.server}/${photo.id}_${photo.secret}_z.jpg`,
         title: photo.title,
-        date: photo.date
+        id: photo.id,
+        owner: photo.owner,
       }
       Urls.push(photoObj);
     })
