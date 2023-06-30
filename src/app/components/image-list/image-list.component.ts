@@ -16,8 +16,6 @@ export class ImageListComponent implements OnChanges, OnInit {
 
   showInfo: boolean = false;
 
-  imageInfo: any
-
   constructor(private imageService: ImageService) {
   }
 
@@ -27,9 +25,16 @@ export class ImageListComponent implements OnChanges, OnInit {
     }
     console.log("Starting"); // this is a test -> need to bind the value of the search bar with this.
     let response = this.imageService.getPhotosByKeyword(searchTerm).then((response) => {
-      console.log(response);
+      //console.log(response);
       this.images = this.imageService.parseResponse(response);
-      console.log(this.images);
+      for (let image of this.images) {
+        response = this.imageService.getPhotoInfo(image.id).then((infos) => {
+          image = {...image, ...infos};
+          //console.log(Object.values(country));
+        }).catch((error) => {
+          console.log(error);
+        })
+      }
     })
   }
 
@@ -49,22 +54,17 @@ export class ImageListComponent implements OnChanges, OnInit {
   showImageDetails(image: any) {
     this.selectedImage = image;
     this.showInfo = true;
-    //console.log("HOVERING");
     //console.log(this.showInfo);
-    let imageInfo = this.imageService.getPhotoInfo(this.selectedImage.id).then((infos) => {
-      this.imageInfo = infos;
-      //console.log(this.imageInfo);
-      //console.log(this.imageInfo.location)
-      const country: Object = this.imageInfo.location['country'];
-      //console.log(Object.values(country));
-    }).catch((error) => {
-      console.log(error);
-    })
+    //console.log(image);
+    for (let image_ of this.images) {
+      if (image_ === image) {
+        this.selectedImage = image_;
+      }
+    }
   }
 
   hideImageDetails() {
     this.selectedImage = null;
-    this.imageInfo = null;
     this.showInfo = false;
     //console.log(this.showInfo);
   }
