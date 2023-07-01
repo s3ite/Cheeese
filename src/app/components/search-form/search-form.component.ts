@@ -12,6 +12,7 @@ export class SearchFormComponent {
   maxUploadDate: Date = new Date();
   perPage: number = 15;
   fullDetail: boolean = false;
+  safesearch: boolean = false;
 
   @Output() formEvent : EventEmitter<any> = new EventEmitter<any>();
 
@@ -22,7 +23,8 @@ export class SearchFormComponent {
       minUploadDate: this.minUploadDate,
       maxUploadDate: this.maxUploadDate,
       per_page: this.perPage,
-      fullDetail: this.fullDetail
+      fullDetail: this.fullDetail,
+      safesearch: this.safesearch
     };
     this.formEvent.emit(formData);
   }

@@ -1,7 +1,9 @@
 form {
+  display: flex;
   flex-direction: column;
-  align-items: center; /* Added property */
-  margin-top: 20px; /* Added property */
+  align-items: center;
+  margin: 20px auto;
+  max-width: 1000px; /* Adjust as per your preference */
 }
 
 .formField {
@@ -9,22 +11,25 @@ form {
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-between;
+  align-items: center; /* Added property */
+  margin: 10px 0; /* Added property */
 }
 
 input[type="number"],
-input[type="date"] {
-  width: 120px; /* Adjust width as needed */
+input[type="date"],
+input[type="checkbox"] {
+  width: 130px;
   height: 40px;
   padding: 8px;
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  margin-right: 2px; /* Added property */
-  margin-bottom: 5px;
+  margin: 5px;
 }
 
 input[type="number"]:focus,
-input[type="date"]:focus {
+input[type="date"]:focus,
+input[type="checkbox"]:focus {
   outline: none;
   border-color: #6c63ff;
   box-shadow: 0 0 4px rgba(108, 99, 255, 0.6);
@@ -38,18 +43,32 @@ button[type="submit"] {
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
-  display: block;
-  margin: 0 auto;
+  margin: 20px 0; /* Increased margin to distance from the form fields */
 }
 
-button[type="submit"]:hover {
-  background-color: #524ce0;
-}
+button[type="submit"]:hover,
 button[type="submit"]:focus {
   background-color: #524ce0;
 }
 
 .input-title {
-  display: block;
   margin-bottom: 5px;
+  width: 140px; /* adjust this value to fit the widest label */
+  text-align: right;
+  margin-right: 10px;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: row; /* change this to row */
+  align-items: center; /* keep this */
+  margin: 5px; /* keep this */
+  flex: 1; /* keep this */
+  #justify-content: flex-end; /* add this to align items to the right */
+}
+
+
+.input-field {
+  width: 100%;
+  max-width: 150px; /* Added property */
 }

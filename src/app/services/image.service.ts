@@ -40,9 +40,9 @@ export class ImageService {
       let response: any;
       console.log(formData.per_page);
       if (specifiedDate)
-        response = await imageService.getPhotosByKeyword(searchTerm, formData.per_page, formMinDate, formMaxDate);
+        response = await imageService.getPhotosByKeyword(searchTerm, formData.per_page, formMinDate, formMaxDate, formData.safesearch);
       else
-        response = await imageService.getPhotosByKeyword(searchTerm, formData.per_page);
+        response = await imageService.getPhotosByKeyword(searchTerm, formData.per_page, undefined, undefined, formData.safesearch);
       const images: any[] = imageService.parseResponse(response, formData.imageSize);
       const promises = images.map(async (image: any) => {
         //console.log(image);
@@ -93,7 +93,7 @@ export class ImageService {
     return suffix;
   }
 
-  getPhotosByKeyword = async (keyword: string, perPage: number, minUploadDate?: Date, maxUploadDate?: Date) => {
+  getPhotosByKeyword = async (keyword: string, perPage: number, minUploadDate?: Date, maxUploadDate?: Date, safesearch?: boolean) => {
     try {
       console.log(perPage);
       const params: any = {
@@ -111,6 +111,12 @@ export class ImageService {
       }
       if (maxUploadDate) {
         params.max_taken_date = Math.floor(maxUploadDate.getTime() / 1000); // Convert to UNIX timestamp
+      }
+      console.log("HERE")
+      console.log(safesearch)
+      if(safesearch){
+        console.log("SEARCH SAFE ACTIVEEEEEEEEEEEEEEEEEEEEEEEEEEEEEED")
+        params.safe_search = 1
       }
       console.log(params);
 
