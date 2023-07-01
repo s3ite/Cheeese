@@ -9,6 +9,8 @@ h2 {
   text-align: center;
   font-size: 24px;
   margin-bottom: 20px;
+  font-weight: bold;
+  font-family: 'Arial', sans-serif;
 }
 
 .form-group {
@@ -23,6 +25,9 @@ h2 {
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 4px;
+}
+.form-control:hover {
+  box-shadow: 0 0 5px white; /* Apply box-shadow on hover */
 }
 
 

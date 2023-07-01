@@ -1,11 +1,13 @@
 <form (ngSubmit)="search()">
-    <!-- Champs de filtrage -->
+  <!-- Champs de filtrage -->
+  <div class ="formField">
     <input type="number" [(ngModel)]="imageSize" name="imageSize" placeholder="Taille de l'image">
     <input type="date" [(ngModel)]="minUploadDate" name="minUploadDate" placeholder="Date minimum d'upload">
     <input type="date" [(ngModel)]="maxUploadDate" name="maxUploadDate" placeholder="Date maximale d'upload">
+  </div>
 
-    <!-- Autres champs de filtrage, tags, etc. -->
+  <!-- Autres champs de filtrage, tags, etc. -->
 
-    <!-- Bouton de recherche -->
-    <button type="submit">Rechercher</button>
+  <!-- Bouton de recherche -->
+  <button type="submit">Rechercher</button>
 </form>

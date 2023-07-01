@@ -1,3 +1,6 @@
 .image-details-container {
   position: relative;
 }
+p, h2 {
+  color: black;
+}

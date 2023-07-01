@@ -12,7 +12,8 @@ body {
 h1 {
   text-align: center;
   font-size: 36px;
-  color: #333;
+  color: white;
   font-weight: bold;
+  font-family: 'Arial', sans-serif;
 }
 
