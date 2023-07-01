@@ -24,8 +24,9 @@ export class ImageListComponent implements OnChanges, OnInit {
   ngOnChanges(changes: SimpleChanges) {
     console.log(changes);
     if (changes['searchTerm']) {
-      if (!changes['searchTerm'].firstChange && changes['searchTerm'].currentValue) {
-        this.imageService.handleSearch(this.searchTerm, this.imageService)
+      if ((!changes['searchTerm'].firstChange && changes['searchTerm'].currentValue) ||
+        (!changes['formData'].firstChange && changes['formData'].currentValue)) {
+        this.imageService.handleSearch(this.searchTerm, this.imageService, this.formData)
           .then((res) => {
             this.images = res;
           })
@@ -39,13 +40,20 @@ export class ImageListComponent implements OnChanges, OnInit {
       if (!changes['formData'].firstChange && changes['formData'].currentValue) {
         console.log(this.formData);
         //TODO Handle the search with form params -> change HandleSearch signature.
+        this.imageService.handleSearch(this.searchTerm, this.imageService, this.formData)
+          .then((res) => {
+            this.images = res;
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       }
     }
   }
 
   ngOnInit() {
     console.log(this.searchTerm);
-    this.imageService.handleSearch(this.searchTerm, this.imageService).then((res) => {
+    this.imageService.handleSearch(this.searchTerm, this.imageService, this.formData).then((res) => {
       this.images = res;
     })
   }

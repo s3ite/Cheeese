@@ -20,7 +20,7 @@ export class AppComponent {
   }
   onForm(formData:any) {
     this.formData = formData;
-    console.log(this.formData);
+    //console.log(this.formData);
   }
 }
 

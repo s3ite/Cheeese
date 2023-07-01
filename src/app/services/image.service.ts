@@ -10,20 +10,51 @@ const FLICKR_KEY = environment.flickrKey;
 
 export class ImageService {
 
-  async handleSearch(searchTerm: string, imageService: ImageService): Promise<any> {
+  async handleSearch(searchTerm: string, imageService: ImageService, formData: any): Promise<any> {
     if (searchTerm === "") {
       return;
     }
-    try {
-      const response = await imageService.getPhotosByKeyword(searchTerm);
-      const images: any[] = imageService.parseResponse(response);
-      const promises = images.map(async (image: any) => {
-        const infos = await imageService.getPhotoInfo(image.id);
-        return {...image, ...infos};
-      });
-      return await Promise.all(promises);
-    } catch (error) {
+    if(formData === undefined) {
+      try {
+        const response = await imageService.getPhotosByKeyword(searchTerm, 30);
+        const images: any[] = imageService.parseResponse(response);
+        const promises = images.map(async (image: any) => {
+          const infos = await imageService.getPhotoInfo(image.id);
+          return {...image, ...infos};
+        });
+        return await Promise.all(promises);
+      } catch (error) {
+      }
     }
+    else {
+      console.log(formData);
+      try {
+        const  formMinDate = new Date(formData.minUploadDate);
+        const  formMaxDate = new Date(formData.maxUploadDate);
+        console.log(formMinDate);
+        console.log(formMaxDate);
+        const specifiedDate = this.checkForSpecifiedDate(formMinDate) || this.checkForSpecifiedDate(formMaxDate);
+        console.log(specifiedDate);
+        let response: any;
+        if(specifiedDate)
+          response = await imageService.getPhotosByKeyword(searchTerm, 15, formMinDate, formMaxDate);
+        else
+          response = await imageService.getPhotosByKeyword(searchTerm, 15);
+        const images: any[] = imageService.parseResponse(response);
+        const promises = images.map(async (image: any) => {
+          const infos = await imageService.getPhotoInfo(image.id);
+          return {...image, ...infos};
+        });
+        return await Promise.all(promises);
+      } catch (error) {
+      }
+    }
+  }
+
+  checkForSpecifiedDate(formDate: Date): boolean{
+    const currentDate = new Date(Date.now());
+    return!(formDate.getDay() === currentDate.getDay() && formDate.getMonth() === currentDate.getMonth()
+    && formDate.getFullYear() === currentDate.getFullYear());
   }
 
 
@@ -40,18 +71,27 @@ export class ImageService {
     })
     return Urls;
   }
-  getPhotosByKeyword = async (keyword: string) => {
+  getPhotosByKeyword = async (keyword: string, perPage: number, minUploadDate?: Date, maxUploadDate?: Date) => {
     try {
-      const response = await axios.get('https://api.flickr.com/services/rest/', {
-        params: {
-          method: 'flickr.photos.search',
-          api_key: FLICKR_KEY,
-          format: 'json',
-          nojsoncallback: '1',
-          text: keyword,
-          per_page: 15
-        },
-      });
+      const params: any = {
+        method: 'flickr.photos.search',
+        api_key: FLICKR_KEY,
+        format: 'json',
+        nojsoncallback: '1',
+        text: keyword,
+        per_page: perPage
+      };
+
+      // Add date range parameters if provided
+      if (minUploadDate) {
+        params.min_taken_date = Math.floor(minUploadDate.getTime() / 1000); // Convert to UNIX timestamp
+      }
+      if (maxUploadDate) {
+        params.max_taken_date = Math.floor(maxUploadDate.getTime() / 1000); // Convert to UNIX timestamp
+      }
+      console.log(params);
+
+      const response = await axios.get('https://api.flickr.com/services/rest/', { params });
       const data = response.data;
       console.log(data);
       return data;
