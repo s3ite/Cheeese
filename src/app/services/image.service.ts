@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import axios from "axios";
 import {environment} from '../environments';
+import {LogicalFileSystem} from "@angular/compiler-cli";
 
 const FLICKR_KEY = environment.flickrKey;
 
@@ -14,7 +15,7 @@ export class ImageService {
     if (searchTerm === "") {
       return;
     }
-    if(formData === undefined) {
+    if (formData === undefined) {
       try {
         const response = await imageService.getPhotosByKeyword(searchTerm, 30);
         const images: any[] = imageService.parseResponse(response);
@@ -25,52 +26,73 @@ export class ImageService {
         return await Promise.all(promises);
       } catch (error) {
       }
-    }
-    else {
+    } else {
       console.log(formData);
-      try {
-        const  formMinDate = new Date(formData.minUploadDate);
-        const  formMaxDate = new Date(formData.maxUploadDate);
-        console.log(formMinDate);
-        console.log(formMaxDate);
-        const specifiedDate = this.checkForSpecifiedDate(formMinDate) || this.checkForSpecifiedDate(formMaxDate);
-        console.log(specifiedDate);
-        let response: any;
-        if(specifiedDate)
-          response = await imageService.getPhotosByKeyword(searchTerm, 15, formMinDate, formMaxDate);
-        else
-          response = await imageService.getPhotosByKeyword(searchTerm, 15);
-        const images: any[] = imageService.parseResponse(response);
-        const promises = images.map(async (image: any) => {
-          const infos = await imageService.getPhotoInfo(image.id);
-          return {...image, ...infos};
-        });
-        return await Promise.all(promises);
-      } catch (error) {
-      }
+      return await this.handleSearchForm(formData, imageService, searchTerm);
     }
   }
 
-  checkForSpecifiedDate(formDate: Date): boolean{
+  // @ts-ignore
+  private async handleSearchForm(formData: any, imageService: ImageService, searchTerm: string) {
+    try {
+      const formMinDate = new Date(formData.minUploadDate);
+      const formMaxDate = new Date(formData.maxUploadDate);
+      const specifiedDate = this.checkForSpecifiedDate(formMinDate) || this.checkForSpecifiedDate(formMaxDate);
+      let response: any;
+      if (specifiedDate)
+        response = await imageService.getPhotosByKeyword(searchTerm, 15, formMinDate, formMaxDate);
+      else
+        response = await imageService.getPhotosByKeyword(searchTerm, 15);
+      const images: any[] = imageService.parseResponse(response, formData.imageSize);
+      const promises = images.map(async (image: any) => {
+        console.log(image);
+        const infos = await imageService.getPhotoInfo(image.id, image.size);
+        return {...image, ...infos};
+      });
+      return await Promise.all(promises);
+    } catch (error) {
+    }
+  }
+
+  checkForSpecifiedDate(formDate: Date): boolean {
     const currentDate = new Date(Date.now());
-    return!(formDate.getDay() === currentDate.getDay() && formDate.getMonth() === currentDate.getMonth()
-    && formDate.getFullYear() === currentDate.getFullYear());
+    return !(formDate.getDay() === currentDate.getDay() && formDate.getMonth() === currentDate.getMonth()
+      && formDate.getFullYear() === currentDate.getFullYear());
   }
 
 
-  parseResponse = function (responseData: any) { // -> get all the urls associated with the photos.
+  parseResponse = (responseData: any, imageSize?: number) => { // -> get all the urls associated with the photos.
     let Urls: Object[] = [];
+    let suffix: string = "";
+    if (imageSize === undefined || imageSize === 0) {
+      suffix = "z";
+    } else {
+      suffix = this.getSizeSuffix(imageSize);
+    }
     responseData.photos.photo.forEach((photo: any) => {
       const photoObj = {
-        url: `https://live.staticflickr.com/${photo.server}/${photo.id}_${photo.secret}_z.jpg`,
+        url: `https://live.staticflickr.com/${photo.server}/${photo.id}_${photo.secret}_${suffix}.jpg`,
         title: photo.title,
         id: photo.id,
         owner: photo.owner,
+        size: suffix
       }
       Urls.push(photoObj);
     })
     return Urls;
   }
+
+  getSizeSuffix(imageSize: number): string {
+    let suffix = "w";
+    if (imageSize >= 400 && imageSize <= 800)
+      suffix = "z";
+    else if (imageSize > 800 && imageSize <= 1200)
+      suffix = "c";
+    else if (imageSize > 1200)
+      suffix = "b"
+    return suffix;
+  }
+
   getPhotosByKeyword = async (keyword: string, perPage: number, minUploadDate?: Date, maxUploadDate?: Date) => {
     try {
       const params: any = {
@@ -79,7 +101,7 @@ export class ImageService {
         format: 'json',
         nojsoncallback: '1',
         text: keyword,
-        per_page: perPage
+        per_page: perPage,
       };
 
       // Add date range parameters if provided
@@ -91,7 +113,7 @@ export class ImageService {
       }
       console.log(params);
 
-      const response = await axios.get('https://api.flickr.com/services/rest/', { params });
+      const response = await axios.get('https://api.flickr.com/services/rest/', {params});
       const data = response.data;
       console.log(data);
       return data;
@@ -100,46 +122,7 @@ export class ImageService {
       return null;
     }
   }
-
-  getRecents = async () => {
-    try {
-      const response = await axios.get(
-        `https://api.flickr.com/services/rest/?method=flickr.photos.getRecent&api_key=${FLICKR_KEY}&format=json&nojsoncallback=1 `
-      );
-      console.log(response);
-      const data = response.data;
-      return data;
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  getPhotosBySearch = async (input: string) => {
-    try {
-      const response = await axios.get(
-        `https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=${FLICKR_KEY}&format=json&nojsoncallback=1&text=${input}`
-      );
-      const data = response.data;
-      return data;
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  getPhotoSizesAndLinks = async (id: string) => {
-    try {
-      const url = `https://api.flickr.com/services/rest/?method=flickr.photos.getSizes&api_key=${FLICKR_KEY}&format=json&nojsoncallback=1&photo_id=${id}`;
-      console.log(url);
-      const response = await axios.get(
-        url
-      );
-      const data = response.data;
-      return data;
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  getPhotoInfo = async (id: string) => {
+  getPhotoInfo = async (id: string, imageSize?: string) => {
     try {
       const response = await axios.get(
         `https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=${FLICKR_KEY}&format=json&nojsoncallback=1&photo_id=${id}`
@@ -154,7 +137,9 @@ export class ImageService {
         location: data.photo.location,
         comments: data.photo.comments._content,
         tags: data.photo.tags.tag,
+        size: this.suffixSizeToString(imageSize)
       };
+      console.log(result);
       return result;
     } catch (error) {
       console.error(error);
@@ -162,75 +147,19 @@ export class ImageService {
     }
   };
 
-  // @ts-ignore
-  getPhotosByOwner = async (owner) => {
-    try {
-      const url = `https://api.flickr.com/services/rest/?method=flickr.people.getPhotos&api_key=${FLICKR_KEY}&format=json&nojsoncallback=1&user_id=${owner}`;
-      const response = await axios.get(
-        url
-      );
-      const data = response.data;
-      return data;
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  suffixSizeToString = (suffix?: string): string => {
+    let size = "";
+    if(suffix === undefined)
+      return "normal";
+    if (suffix === "w")
+      size = "small"
+    else if (suffix === "z")
+      size = "normal"
+    else if (suffix === "c")
+      size = "big";
+    else if (suffix === "b")
+      size = "gigantic";
+    return size;
+  }
 }
-
-
-const imageService = new ImageService();
-
-// imageService.getPhotosByKeyword("bus").then((data) => {
-//   console.log(data);
-// }).catch((error) => {
-//   console.log(error);
-// })
-// Example: Get popular photos
-// imageService.getRecents()
-//   .then((data) => {
-//     console.log(JSON.stringify(data, null, 2));
-//   })
-//   .catch((error) => {
-//     console.error(error);
-//   });
-
-// // Example: Search photos by input
-// const searchInput = 'cat';
-// imageService.getPhotosBySearch(searchInput)
-//   .then((data) => {
-//     console.log(data);
-//   })
-//   .catch((error) => {
-//     console.error(error);
-//   });
-
-// // Example: Get photo sizes and links by ID
-// const photoId = '52994475453';
-// imageService.getPhotoSizesAndLinks(photoId)
-//   .then((data) => {
-//     console.log(data);
-//   })
-//   .catch((error) => {
-//     console.error(error);
-//   });
-
-// // Example: Get photo info by ID
-// const photoId = '52959848298';
-// imageService.getPhotoInfo(photoId)
-//   .then((data) => {
-//     console.log(data);
-//   })
-//   .catch((error) => {
-//     console.error(error);
-//   });
-
-// // Example: Get photos by owner
-// const owner = '8740272@N04';
-// imageService.getPhotosByOwner(owner)
-//   .then((data) => {
-//     console.log(data);
-//   })
-//   .catch((error) => {
-//     console.error(error);
-//   });
 

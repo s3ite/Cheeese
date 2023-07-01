@@ -4,5 +4,6 @@
     <p>Par {{ imageInfos.owner }}</p>
     <p>Datant du {{ imageInfos.date }}</p>
     <p *ngIf="imageInfos.location"> localisation: {{ Object.values(imageInfos.location['country'])[0]}}</p>
+    <p>size of the image (click to see the real size): {{imageInfos.size}}</p>
   </div>
 </div>

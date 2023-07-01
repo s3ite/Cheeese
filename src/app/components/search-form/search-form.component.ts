@@ -14,8 +14,6 @@ export class SearchFormComponent {
   @Output() formEvent : EventEmitter<any> = new EventEmitter<any>();
 
   search() {
-    // Logique de recherche et filtrage
-    // Appeler les services appropriés pour récupérer les images en fonction des critères de recherche
     const formData = {
       searchQuery: this.searchQuery,
       imageSize: this.imageSize,
