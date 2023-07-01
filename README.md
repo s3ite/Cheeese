@@ -1,5 +1,12 @@
 # Cheeeeese
 
+This is a search engine for Photos using Flickr API. 
+
+Some precisions :
+
+-It is normal that the image always has the same size, it is normalized for display purpose. 
+ If you want to see the real size -> click on the image and you will see the real size.
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.0.2.
 
 ## Development server
