@@ -1,13 +1,35 @@
 <form (ngSubmit)="search()">
   <!-- Champs de filtrage -->
-  <div class ="formField">
-    <input type="number" [(ngModel)]="imageSize" name="imageSize" placeholder="Taille de l'image">
-    <input type="date" [(ngModel)]="minUploadDate" name="minUploadDate" placeholder="Date minimum d'upload">
-    <input type="date" [(ngModel)]="maxUploadDate" name="maxUploadDate" placeholder="Date maximale d'upload">
+  <div class="formField">
+    <div class="input-container">
+      <label for="imageSize" class="input-title">Image size</label>
+      <input type="number" id="imageSize" [(ngModel)]="imageSize" name="imageSize" class="input-field" placeholder="Taille de l'image">
+      <p>
+        (0-1600), normal size
+        <br>
+        by default
+      </p>
+    </div>
+
+    <div class="input-container">
+      <label for="dateMin" class="input-title">Min Date</label>
+      <input type="date" id="dateMin" [(ngModel)]="minUploadDate" name="minUploadDate" class="input-field" placeholder="Date minimum d'upload">
+    </div>
+
+    <div class="input-container">
+      <label for="dateMax" class="input-title">Max Date</label>
+      <input type="date" id="dateMax" [(ngModel)]="maxUploadDate" name="maxUploadDate" class="input-field" placeholder="Date maximale d'upload">
+    </div>
+
+    <div class="input-container">
+      <label for="perPage" class="input-title">Number of Images</label>
+      <input type="number" id="perPage"  [(ngModel)]="perPage" name="perPage" class="input-field" placeholder="Nombres d'images">
+    </div>
+    <div class="input-container">
+      <label for="fullDetail" class="input-title">Full detail <br>about images</label>
+      <input type="checkbox" id="fullDetail" [(ngModel)]="fullDetail" name="fullDetail" class="input-field" placeholder="Full detail">
+    </div>
   </div>
-
-  <!-- Autres champs de filtrage, tags, etc. -->
-
-  <!-- Bouton de recherche -->
   <button type="submit">Rechercher</button>
 </form>
+

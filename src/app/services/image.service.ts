@@ -17,7 +17,7 @@ export class ImageService {
     }
     if (formData === undefined) {
       try {
-        const response = await imageService.getPhotosByKeyword(searchTerm, 30);
+        const response = await imageService.getPhotosByKeyword(searchTerm, 15);
         const images: any[] = imageService.parseResponse(response);
         const promises = images.map(async (image: any) => {
           const infos = await imageService.getPhotoInfo(image.id);
@@ -27,7 +27,6 @@ export class ImageService {
       } catch (error) {
       }
     } else {
-      console.log(formData);
       return await this.handleSearchForm(formData, imageService, searchTerm);
     }
   }
@@ -39,13 +38,14 @@ export class ImageService {
       const formMaxDate = new Date(formData.maxUploadDate);
       const specifiedDate = this.checkForSpecifiedDate(formMinDate) || this.checkForSpecifiedDate(formMaxDate);
       let response: any;
+      console.log(formData.per_page);
       if (specifiedDate)
-        response = await imageService.getPhotosByKeyword(searchTerm, 15, formMinDate, formMaxDate);
+        response = await imageService.getPhotosByKeyword(searchTerm, formData.per_page, formMinDate, formMaxDate);
       else
-        response = await imageService.getPhotosByKeyword(searchTerm, 15);
+        response = await imageService.getPhotosByKeyword(searchTerm, formData.per_page);
       const images: any[] = imageService.parseResponse(response, formData.imageSize);
       const promises = images.map(async (image: any) => {
-        console.log(image);
+        //console.log(image);
         const infos = await imageService.getPhotoInfo(image.id, image.size);
         return {...image, ...infos};
       });
@@ -95,6 +95,7 @@ export class ImageService {
 
   getPhotosByKeyword = async (keyword: string, perPage: number, minUploadDate?: Date, maxUploadDate?: Date) => {
     try {
+      console.log(perPage);
       const params: any = {
         method: 'flickr.photos.search',
         api_key: FLICKR_KEY,
@@ -139,7 +140,7 @@ export class ImageService {
         tags: data.photo.tags.tag,
         size: this.suffixSizeToString(imageSize)
       };
-      console.log(result);
+      //console.log(result);
       return result;
     } catch (error) {
       console.error(error);

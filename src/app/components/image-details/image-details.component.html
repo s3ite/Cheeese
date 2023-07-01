@@ -5,5 +5,15 @@
     <p>Datant du {{ imageInfos.date }}</p>
     <p *ngIf="imageInfos.location"> localisation: {{ Object.values(imageInfos.location['country'])[0]}}</p>
     <p>size of the image (click to see the real size): {{imageInfos.size}}</p>
+    <div *ngIf="fullDetail">
+      <p> Number of comments : {{ imageInfos.comments }}</p>
+      <p> Description : <br> {{ imageInfos.description }}</p>
+      <div id="image-list" *ngIf="imageInfos.tags">
+        List of tagged images
+        <p *ngFor="let tag of imageInfos.tags">
+          {{ Object.values(tag) }}
+        </p>
+      </div>
+    </div>
   </div>
 </div>

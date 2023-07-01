@@ -17,6 +17,8 @@ export class ImageListComponent implements OnChanges, OnInit {
 
   @Input() formData: any = null;
 
+  fullDetail: boolean = false;
+
   constructor(private imageService: ImageService) {
   }
 
@@ -33,8 +35,7 @@ export class ImageListComponent implements OnChanges, OnInit {
             console.log(error);
           });
       }
-    }
-    else if(changes['formData']) {
+    } else if (changes['formData']) {
       if (!changes['formData'].firstChange && changes['formData'].currentValue) {
         console.log(this.formData);
         this.imageService.handleSearch(this.searchTerm, this.imageService, this.formData)
@@ -58,6 +59,15 @@ export class ImageListComponent implements OnChanges, OnInit {
   showImageDetails(image: any) {
     this.selectedImage = image;
     this.showInfo = true;
+    if (this.formData !== undefined) {
+      if (this.formData.fullDetail) {
+        console.log("Showing Full Detail");
+        this.fullDetail = true;
+      }
+      else {
+        this.fullDetail = false;
+      }
+    }
     for (let image_ of this.images) {
       if (image_ === image) {
         this.selectedImage = image_;

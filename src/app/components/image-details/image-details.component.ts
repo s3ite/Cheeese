@@ -9,6 +9,7 @@ import {ImageService} from "../../services/image.service";
 })
 export class ImageDetailsComponent implements OnInit {
   @Input() imageInfos: any;
+  @Input() fullDetail: boolean = false;
 
   constructor(private imageService: ImageService) {}
 

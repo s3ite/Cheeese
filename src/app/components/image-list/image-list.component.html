@@ -12,7 +12,7 @@
       <div class="image-details-container"
            *ngIf="showInfo && selectedImage === image">
         <div class="app-image-details-popup">
-          <app-image-details [imageInfos]="selectedImage"></app-image-details>
+          <app-image-details [imageInfos]="selectedImage" [fullDetail]="fullDetail"></app-image-details>
         </div>
       </div>
     </div>

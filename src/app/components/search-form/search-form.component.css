@@ -4,6 +4,13 @@ form {
   margin-top: 20px; /* Added property */
 }
 
+.formField {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
 input[type="number"],
 input[type="date"] {
   width: 120px; /* Adjust width as needed */
@@ -37,4 +44,12 @@ button[type="submit"] {
 
 button[type="submit"]:hover {
   background-color: #524ce0;
+}
+button[type="submit"]:focus {
+  background-color: #524ce0;
+}
+
+.input-title {
+  display: block;
+  margin-bottom: 5px;
 }
